@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "location_field.apps.DefaultConfig",
+    "anymail",
     # Local
     "core.apps.CoreConfig",
 ]
@@ -221,3 +222,12 @@ if DEBUG:
         "debug_toolbar.panels.redirects.RedirectsPanel",
         "debug_toolbar.panels.profiling.ProfilingPanel",
     ]
+
+# anymail
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
+}
+
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL")
