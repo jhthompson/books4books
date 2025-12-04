@@ -3,7 +3,7 @@
 Your books:
 {% for listing in offered_listings %}- {{ listing.title }} by {{ listing.authors }}
 {% endfor %}
-{{ proposed_by.username }}'s books:
+{{ proposed_to.username }}'s books:
 {% for listing in requested_listings %}- {{ listing.title }} by {{ listing.authors }}
 {% endfor %}
 Message {{ proposed_to.username }} here:
