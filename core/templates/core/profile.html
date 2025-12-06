@@ -9,7 +9,7 @@
         <p><i class="bi bi-clock margin-inline-end:s-3"></i>Joined on <strong>{{ profile_user.date_joined|date:"F j, Y" }}</strong></p>
     </div>
     {% if profile_user == request.user %}
-        <div class="display:flex justify-content:flex-end gap:s0">
+        <div class="display:flex justify-content:center flex-wrap:wrap gap:s0">
             <a class="button" href="{% url 'account_email' %}">Manage Emails</a>
             <a class="button" href="{% url 'account_change_password' %}">Change Password</a>
             <a class="button" href="{% url 'edit_profile' profile_user.id %}">Edit Profile</a>

@@ -158,6 +158,10 @@
     flex-direction: column;
 }
 
+.flex-wrap\:wrap {
+    flex-wrap: wrap;
+}
+
 .align-items\:center {
     align-items: center;
 }
