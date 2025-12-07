@@ -24,10 +24,21 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 <script>
-const map = L.map('map', { maxZoom: 13 }).setView([56.1304, -106.3468], 4); // Centered on Canada
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+function onLocationError(e, map) {
+    // In case of locator error, center on Canada
+    map.setView([56.1304, -106.3468], 4);
+}
+
+const map = L.map('map')
+
+map.locate({ setView: true, maxZoom: 14 });
+map.on('locationerror', (e) => onLocationError(e, map));
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
     maxZoom: 18,
+    attribution: '© OpenStreetMap'
 }).addTo(map);
 
 const markers = L.markerClusterGroup();
