@@ -1,4 +1,9 @@
-
+- Don't use single point for location
+  - Define and select neighborhoods? Wards? Districts?
+- Allow more than just trades
+  - Give-away
+  - Loan
+  - Others? 
 - [ ] Improve search experience
   - [ ] Text search
     - [ ] Add genre filtering
