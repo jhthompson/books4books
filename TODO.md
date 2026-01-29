@@ -3,6 +3,7 @@
   - Membership is requested, then approved by a group admin
     - Similar to "Gifting in Alta Vista" group, or "Buy Nothing" community groups
   - Books can be listed in 0 or many groups at once
+- Add Facebook signup/login through Django Allauth
 - Allow more than just trades
   - Give-away
   - Loan
