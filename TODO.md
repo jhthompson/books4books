@@ -1,5 +1,8 @@
-- Don't use single point for location
-  - Define and select neighborhoods? Wards? Districts?
+- Don't require location on user account
+  - Instead, create "groups" that will be their own communities
+  - Membership is requested, then approved by a group admin
+    - Similar to "Gifting in Alta Vista" group, or "Buy Nothing" community groups
+  - Books can be listed in 0 or many groups at once
 - Allow more than just trades
   - Give-away
   - Loan
