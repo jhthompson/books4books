@@ -1,44 +1,18 @@
 from isbn_field.validators import ISBNValidator
-from location_field.forms.spatial import LocationField
 
 from django import forms
-from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 
-from core.models import BookListing, Genre, UserProfile
-
-
-class BookSwapSignupForm(forms.Form):
-    city = forms.CharField(max_length=100)
-    location = LocationField(
-        based_fields=["city"],
-        initial=Point(
-            -75.6901106,
-            45.4208777,
-        ),
-        help_text="Select the general area where you want to swap books. ",
-    )
-
-    def signup(self, request, user):
-        profile = UserProfile.objects.create(
-            user=user,
-            city=self.cleaned_data["city"],
-            location=self.cleaned_data["location"],
-        )
-        profile.save()
+from core.models import BookListing, Genre
 
 
 class EditProfileForm(forms.Form):
     username = forms.CharField(max_length=150)
-    city = forms.CharField(max_length=100)
-    location = LocationField(
-        based_fields=["city"],
-        initial=Point(
-            -75.6901106,
-            45.4208777,
-        ),
-        help_text="Select the general area where you want to swap books. ",
-    )
+
+
+class NewCommunityForm(forms.Form):
+    name = forms.CharField(max_length=255)
+    description = forms.CharField(max_length=1000)
 
 
 class IsbnForm(forms.Form):

@@ -3,7 +3,6 @@ import logging
 from isbn_field import ISBNField
 
 from django.contrib.auth.models import User
-from django.contrib.gis.db import models as geo_models
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.db import models
@@ -16,13 +15,57 @@ from django.urls import reverse
 logger = logging.getLogger(__name__)
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    city = models.CharField(max_length=100)
-    location = geo_models.PointField()
+class Community(models.Model):
+    class Meta:
+        verbose_name_plural = "Communities"
+
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True)
+
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    members = models.ManyToManyField(
+        User, through="CommunityMembership", related_name="communities"
+    )
 
     def __str__(self):
-        return f"{self.user.username}'s Profile"
+        return self.name
+
+
+class CommunityMembership(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    permission_level = models.CharField(
+        max_length=10,
+        choices=[("ADMIN", "Admin"), ("MEMBER", "Member")],
+        default="MEMBER",
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "community"], name="unique_user_community"
+            )
+        ]
+
+
+class CommunityBookListing(models.Model):
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    book_listing = models.ForeignKey("BookListing", on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["community", "book_listing"],
+                name="unique_community_book_listing",
+            )
+        ]
 
 
 class OpenLibraryAuthor(models.Model):
@@ -102,6 +145,9 @@ class BookListing(models.Model):
         choices=Status.choices,
         default=Status.PENDING,
     )
+    communities = models.ManyToManyField(
+        Community, through="CommunityBookListing", related_name="listings"
+    )
 
     # OpenLibrary data (if available)
     openlibrary_edition_id = models.CharField(
@@ -124,9 +170,6 @@ class BookListing(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_city(self):
-        return self.owner.userprofile.city
 
     def remove(self):
         if self.status in [self.Status.AVAILABLE, self.Status.PENDING]:

@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1 class="center text-align:center color-primary">{{ community.name }}</h1>
+<p class="center">{{ community.description }}</p>
+
+Members:
+{% for member in community.members.all %}
+    <p class="center">{{ member }}</p>
+{% endfor %}
+{% endblock main %}

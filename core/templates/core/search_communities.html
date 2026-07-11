@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1 class="center text-align:center color-primary">Search Results</h1>
+<ul class="center stack padding:0">
+{% for community in page_obj %}
+    <li class="box list-style:none">
+        <h2>
+            <a href="{% url 'community' id=community.id %}">{{ community.name }}</a>
+        </h2>
+        <p class=>{{ community.description }}</p>
+        <small class="display:block margin-block-start:s-2"><i class="bi bi-clock margin-inline-end:s-3 color:muted"></i>Created {{ community.created_at|timesince }} ago</small>
+    </li>
+{% endfor %}
+</ul>
+
+<nav class="center margin-block-start:s-2 text-align:center" aria-label="Search result navigation">
+    {% if page_obj.has_previous %}
+        <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?query={{ query }}&page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+</nav>
+{% endblock main %}

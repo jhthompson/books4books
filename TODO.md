@@ -1,8 +1,9 @@
 - Don't require location on user account
-  - Instead, create "groups" that will be their own communities
-  - Membership is requested, then approved by a group admin
-    - Similar to "Gifting in Alta Vista" group, or "Buy Nothing" community groups
-  - Books can be listed in 0 or many groups at once
+  - Instead, create "Communities" that are self-contained
+  - Membership is requested, then approved by a Community admin
+    - Similar to "Gifting in Alta Vista" group, or "Buy Nothing" groups
+  - Books can be listed in 0 or many communities at once
+  - To change, maybe consider mental model of everything as belonging to one "default" community
 - Add Facebook signup/login through Django Allauth
 - Allow more than just trades
   - Give-away

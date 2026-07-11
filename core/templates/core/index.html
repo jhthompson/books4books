@@ -3,10 +3,10 @@
 {% block main %}
 <div class="stack">
     <h1 class="center text-align:center color-primary">Find Your Next Read, Share Your Favorites</h1>
-    <p class="center text-align:center">Join our community of readers and exchange books with people nearby.</p>
+    <p class="center text-align:center">Join communities to find and list books!</p>
 
     <form class="center text-align:center display:flex" action="{% url 'search' %}" method="get">
-        <input class="flex:1" type="text" name="query" placeholder="Search for books by title or author...">
+        <input class="flex:1" type="text" name="query" placeholder="Search for a community near you...">
         <button>
             <i class="bi bi-search"></i>
         </button>
@@ -22,7 +22,6 @@
                         <h3 class="margin:0">{{ listing.title }}</h3>
                         <p class="margin:0">{{ listing.authors }}</p>
                         <small class="display:block"><i class="bi bi-tag margin-inline-end:s-3"></i>{{ listing.genres.all|join:", " }}</small>
-                        <small class="display:block"><i class="bi bi-geo-alt margin-inline-end:s-3"></i>{{ listing.get_city }}</small>
                         <a class="button margin-block-start:s-2 width:100" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
                             <i class="bi bi-arrow-left-right margin-inline-end:s-2"></i>Swap
                         </a>

@@ -21,7 +21,6 @@ dependencies = [
     { name = "django-allauth" },
     { name = "django-anymail" },
     { name = "django-isbn-field" },
-    { name = "django-location-field" },
     { name = "gunicorn" },
     { name = "pillow" },
     { name = "psycopg" },
@@ -45,7 +44,6 @@ requires-dist = [
     { name = "django-allauth", specifier = ">=65.10.0" },
     { name = "django-anymail", extras = ["mailgun"], specifier = ">=13.1" },
     { name = "django-isbn-field", specifier = ">=0.5.3" },
-    { name = "django-location-field", specifier = ">=2.7.3" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "pillow", specifier = ">=11.2.1" },
     { name = "psycopg", specifier = ">=3.2.9" },
@@ -207,14 +205,6 @@ dependencies = [
     { name = "six" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e1/30/17416fd29134deba92fe4eb0e266dc05e852f1fcf8370086ce464e47dff3/django-isbn-field-0.5.3.tar.gz", hash = "sha256:a6c4d4de37a2025b7f8522f854a1be69abe8e50b049129eec9cb7091c1a4d1a8", size = 6942, upload-time = "2021-12-07T22:38:35.481Z" }
-
-[[package]]
-name = "django-location-field"
-version = "2.7.3"
-source = { registry = "https://pypi.org/simple" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/c3/37c545104c47d97331392a81f3765a2820cf69a0e3b362b2f4fdf250adc1/django_location_field-2.7.3-py2.py3-none-any.whl", hash = "sha256:b0660d3fd024541fbe53ef723e3b02ec4014fbc886ee3d8342e031f1ab28d11d", size = 920952, upload-time = "2023-11-21T14:20:59.132Z" },
-]
 
 [[package]]
 name = "django-mail-panel"

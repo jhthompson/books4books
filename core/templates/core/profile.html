@@ -5,7 +5,6 @@
 
 <div class="center stack">
     <div>
-        <p><i class="bi bi-geo-alt margin-inline-end:s-3"></i>Swaps in <strong>{{ profile_user.userprofile.city }}</strong></p>
         <p><i class="bi bi-clock margin-inline-end:s-3"></i>Joined on <strong>{{ profile_user.date_joined|date:"F j, Y" }}</strong></p>
     </div>
     {% if profile_user == request.user %}

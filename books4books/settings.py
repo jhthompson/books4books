@@ -66,12 +66,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django.contrib.gis",
     # Third-party
     "isbn_field",
     "allauth",
     "allauth.account",
-    "location_field.apps.DefaultConfig",
     "anymail",
     # Local
     "core.apps.CoreConfig",
@@ -201,17 +199,8 @@ if DEBUG:
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.BookSwapSignupForm"
 ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
-
-# django-location-field
-
-LOCATION_FIELD = {
-    "map.provider": "openstreetmap",
-    "search.provider": "nominatim",
-    "provider.openstreetmap.max_zoom": 2,
-}
 
 # django-debug-toolbar
 if DEBUG:

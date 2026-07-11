@@ -5,6 +5,10 @@ from core import views
 urlpatterns = [
     # admin
     path("approve", views.approve_pending_listings, name="approve_pending_listings"),
+    # communities
+    path("communities", views.communities, name="communities"),
+    path("communities/new", views.new_community, name="new_community"),
+    path("communities/<int:id>", views.community, name="community"),
     # listings
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),
@@ -30,10 +34,7 @@ urlpatterns = [
     path("swaps/<int:id>/complete", views.complete_swap, name="complete_swap"),
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),
     # discovery
-    path("search", views.search, name="search"),
-    path("map", views.map_view, name="map"),
-    # API
-    path("api/book-listings/", views.book_listings_api, name="book_listings_api"),
+    path("search", views.search_communities, name="search"),
     # profile
     path("profile/<int:id>", views.profile, name="profile"),
     path("profile/<int:id>/edit", views.edit_profile, name="edit_profile"),

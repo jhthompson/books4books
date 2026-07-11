@@ -21,7 +21,6 @@
         <nav>
             <ol class="navbar list-style:none padding:0">
                 <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'map' %}">Map</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'listings' %}">Listings</a></li>
                     <li><a href="{% url 'swaps' %}" {% if open_swaps_count %}data-badge-count="{{ open_swaps_count }}"{% endif %}>Swaps</a></li>

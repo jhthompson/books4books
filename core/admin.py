@@ -1,15 +1,25 @@
 from django.contrib import admin
-from django.contrib.gis import admin as geo_admin
 
 from core.models import (
     BookListing,
     BookSwap,
     BookSwapEvent,
     BookSwapMessage,
+    Community,
+    CommunityMembership,
     Genre,
     OpenLibraryAuthor,
-    UserProfile,
 )
+
+
+class CommunityMembershipInline(admin.TabularInline):
+    model = CommunityMembership
+    extra = 1
+
+
+@admin.register(Community)
+class CommunityAdmin(admin.ModelAdmin):
+    inlines = [CommunityMembershipInline]
 
 
 @admin.register(Genre)
@@ -24,11 +34,6 @@ class OpenLibraryAuthorAdmin(admin.ModelAdmin):
 
 @admin.register(BookListing)
 class BookListingAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(UserProfile)
-class UserProfileAdmin(geo_admin.GISModelAdmin):
     pass
 
 

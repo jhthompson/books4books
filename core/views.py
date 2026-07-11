@@ -8,11 +8,11 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.gis.geos import Polygon
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Prefetch, Q
-from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
+from django.http import HttpRequest, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core.forms import (
@@ -21,8 +21,17 @@ from core.forms import (
     EditProfileForm,
     IsbnForm,
     NewBookListingForm,
+    NewCommunityForm,
 )
-from core.models import BookListing, BookSwap, BookSwapEvent, Genre, OpenLibraryAuthor
+from core.models import (
+    BookListing,
+    BookSwap,
+    BookSwapEvent,
+    Community,
+    CommunityMembership,
+    Genre,
+    OpenLibraryAuthor,
+)
 from core.open_library import (
     get_book_details_from_openlibrary_search_results,
     search_openlibrary_by_isbn,
@@ -46,6 +55,53 @@ def index(request: HttpRequest):
     return render(request, "core/index.html", context)
 
 
+def communities(request: HttpRequest):
+    context = {}
+    return render(request, "core/communities.html", context)
+
+
+@login_required
+def new_community(request: HttpRequest):
+    if request.method == "POST":
+        form = NewCommunityForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            description = form.cleaned_data.get("description")
+
+            with transaction.atomic():
+                community = Community.objects.create(
+                    name=name,
+                    description=description,
+                    created_by=request.user,
+                )
+                CommunityMembership.objects.create(
+                    user=request.user,
+                    community=community,
+                    permission_level="ADMIN",
+                )
+
+            messages.success(request, "Community created.")
+            return redirect("community", id=community.id)
+
+    else:
+        form = NewCommunityForm()
+
+    return render(
+        request,
+        "core/new_community.html",
+        {
+            "form": form,
+        },
+    )
+
+
+def community(request: HttpRequest, id: int):
+    community = get_object_or_404(Community, id=id)
+    context = {"community": community}
+    return render(request, "core/community.html", context)
+
+
 def profile(request: HttpRequest, id: int):
     context = {}
     context["profile_user"] = get_object_or_404(User, id=id)
@@ -67,8 +123,6 @@ def edit_profile(request: HttpRequest, id: int):
 
         if form.is_valid():
             new_username = form.cleaned_data.get("username")
-            new_city = form.cleaned_data.get("city")
-            new_location = form.cleaned_data.get("location")
 
             if (
                 User.objects.exclude(id=editable_user.id)
@@ -80,18 +134,12 @@ def edit_profile(request: HttpRequest, id: int):
                 editable_user.username = new_username
                 editable_user.save()
 
-                editable_user.userprofile.city = new_city
-                editable_user.userprofile.location = new_location
-                editable_user.userprofile.save()
-
                 messages.success(request, "Profile updated.")
                 return redirect("profile", id=editable_user.id)
     else:
         form = EditProfileForm(
             initial={
                 "username": editable_user.username,
-                "city": editable_user.userprofile.city,
-                "location": editable_user.userprofile.location,
             }
         )
 
@@ -574,19 +622,14 @@ def decline_swap(request: HttpRequest, id: int):
     return render(request, "core/decline_swap.html", context={"swap": swap})
 
 
-def search(request: HttpRequest):
+def search_communities(request: HttpRequest):
     query = request.GET.get("query", "")
     context = {"query": query}
 
-    queryset = BookListing.objects.filter(status=BookListing.Status.AVAILABLE)
+    queryset = Community.objects.all()
 
     if query:
-        queryset = queryset.filter(title__icontains=query) | queryset.filter(
-            authors__icontains=query
-        )
-
-    if request.user.is_authenticated:
-        queryset = queryset.exclude(owner=request.user)
+        queryset = queryset.filter(name__icontains=query)
 
     queryset = queryset.order_by("-created_at")
 
@@ -596,49 +639,7 @@ def search(request: HttpRequest):
 
     context["page_obj"] = page_obj
 
-    return render(request, "core/search.html", context)
-
-
-def map_view(request: HttpRequest):
-    return render(request, "core/map.html")
-
-
-def book_listings_api(request: HttpRequest):
-    try:
-        north = float(request.GET["north"])
-        south = float(request.GET["south"])
-        east = float(request.GET["east"])
-        west = float(request.GET["west"])
-    except (KeyError, ValueError):
-        return JsonResponse({"error": "Invalid bounds"}, status=400)
-
-    bbox = Polygon.from_bbox((west, south, east, north))
-    listings = BookListing.objects.filter(
-        status=BookListing.Status.AVAILABLE, owner__userprofile__location__within=bbox
-    )
-
-    if request.user.is_authenticated:
-        listings = listings.exclude(owner=request.user)
-
-    results = [
-        {
-            "id": listing.id,
-            "title": listing.title,
-            "authors": listing.authors,
-            "cover": listing.cover.url,
-            "location": {
-                "lat": listing.owner.userprofile.location.y,
-                "lng": listing.owner.userprofile.location.x,
-            },
-            "owner": {
-                "id": listing.owner.id,
-                "username": listing.owner.username,
-            },
-        }
-        for listing in listings.select_related("owner__userprofile")
-    ]
-
-    return JsonResponse({"results": results})
+    return render(request, "core/search_communities.html", context)
 
 
 @staff_member_required
