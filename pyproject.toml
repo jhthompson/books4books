@@ -12,7 +12,7 @@ dependencies = [
     "django-isbn-field==0.5.3",
     "gunicorn==23.0.0",
     "pillow==11.2.1",
-    "psycopg==3.2.9",
+    "psycopg==3.3.4",
     "python-dotenv==1.2.1",
     "sentry-sdk[django]==2.43.0",
     "zxing-cpp==2.3.0",
