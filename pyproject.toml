@@ -5,25 +5,25 @@ description = "Django application for swapping books"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "dj-database-url>=3.0.1",
-    "django>=5.2,<6",
-    "django-allauth>=65.10.0",
-    "django-anymail[mailgun]>=13.1",
-    "django-isbn-field>=0.5.3",
-    "gunicorn>=23.0.0",
-    "pillow>=11.2.1",
-    "psycopg>=3.2.9",
-    "python-dotenv>=1.2.1",
-    "sentry-sdk[django]>=2.43.0",
-    "zxing-cpp>=2.3.0",
+    "dj-database-url==3.0.1",
+    "django==5.2",
+    "django-allauth==65.10.0",
+    "django-anymail[mailgun]==13.1",
+    "django-isbn-field==0.5.3",
+    "gunicorn==23.0.0",
+    "pillow==11.2.1",
+    "psycopg==3.2.9",
+    "python-dotenv==1.2.1",
+    "sentry-sdk[django]==2.43.0",
+    "zxing-cpp==2.3.0",
 ]
 
 [dependency-groups]
 dev = [
-    "djade>=1.4.0",
-    "django-debug-toolbar>=5.2.0,<6.0.0",
-    "django-mail-panel>=4.0.4",
-    "ruff>=0.11.7",
+    "djade==1.4.0",
+    "django-debug-toolbar==5.2.0",
+    "django-mail-panel==4.0.4",
+    "ruff==0.11.7",
 ]
 
 [tool.ruff]
