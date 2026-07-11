@@ -56,7 +56,7 @@ requires-dist = [
 dev = [
     { name = "djade", specifier = "==1.9.0" },
     { name = "django-debug-toolbar", specifier = "==7.0.0" },
-    { name = "django-mail-panel", specifier = "==4.0.4" },
+    { name = "django-mail-panel", specifier = "==6.0.0" },
     { name = "ruff", specifier = "==0.15.21" },
 ]
 
@@ -206,14 +206,14 @@ sdist = { url = "https://files.pythonhosted.org/packages/e1/30/17416fd29134deba9
 
 [[package]]
 name = "django-mail-panel"
-version = "4.0.4"
+version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django-debug-toolbar" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/db/a2/7d33feae8e1ed1470c0c944a2974fd4d1a48503ec9d944e997d92a9096af/django_mail_panel-4.0.4.tar.gz", hash = "sha256:032c75a9588efe051a758404f2a68cf29b620e024d44cf40acd4a9b6639206fc", size = 15988, upload-time = "2024-05-09T15:51:19.166Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ac/b9/2e13d3fa539444071da567599f0317bd056fc0d68440ab8a093fb1d87828/django_mail_panel-6.0.0.tar.gz", hash = "sha256:b287673758f9e2275e694f0b76f4fab2317d3c6ec6eb876450160bd90796c18b", size = 15581, upload-time = "2026-06-03T19:13:34.782Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2b/ac/5ad026422748ec916a269111d7e7cdf9ab36c34711faacaf71ad13d569e0/django_mail_panel-4.0.4-py3-none-any.whl", hash = "sha256:440fe6c60bedc9bc4c4a2d9931ac9582d81f5d4c7e976eca7a48e8fc2d758a12", size = 17263, upload-time = "2024-05-09T15:51:17.888Z" },
+    { url = "https://files.pythonhosted.org/packages/71/df/431d87d1fd85fd1674d6bdac4fb98abc1ba0707a24503def8cc99212a46c/django_mail_panel-6.0.0-py3-none-any.whl", hash = "sha256:0e4cad477791af48f275e19096b312d29bc2eec47aef3d160fcba06baf58563f", size = 17666, upload-time = "2026-06-03T19:13:33.737Z" },
 ]
 
 [[package]]
