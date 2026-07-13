@@ -176,21 +176,22 @@ class BookListing(models.Model):
         return self.title
 
     def remove(self):
-        if self.status in [self.Status.AVAILABLE, self.Status.PENDING]:
-            self.status = self.Status.REMOVED
-            self.save()
+        if self.status not in [self.Status.AVAILABLE, self.Status.PENDING]:
+            raise ValidationError(
+                f"Cannot change listing status from {self.status} to {self.Status.REMOVED}."  # noqa: E501
+            )
 
-            return True
-
-        return False
+        self.status = self.Status.REMOVED
+        self.save(update_fields=["status"])
 
     def approve(self):
-        if self.status == self.Status.PENDING:
-            self.status = self.Status.AVAILABLE
-            self.save()
-            return True
+        if self.status != self.Status.PENDING:
+            raise ValidationError(
+                f"Cannot change listing status from {self.status} to {self.Status.AVAILABLE}."  # noqa: E501
+            )
 
-        return False
+        self.status = self.Status.AVAILABLE
+        self.save(update_fields=["status"])
 
 
 class BookSwap(models.Model):
@@ -294,19 +295,19 @@ class BookSwap(models.Model):
         if user != self.proposed_to:
             raise PermissionDenied("Only the receiver can accept this swap")
 
-        if self.status == self.Status.PROPOSED:
-            self.status = self.Status.ACCEPTED
-            self.save()
-
-            BookSwapEvent.objects.create(
-                swap=self,
-                user=user,
-                type=BookSwapEvent.Type.ACCEPT,
+        if self.status != self.Status.PROPOSED:
+            raise ValidationError(
+                f"Cannot change swap status from {self.status} to {self.Status.ACCEPTED}."  # noqa: E501
             )
 
-            return True
+        self.status = self.Status.ACCEPTED
+        self.save()
 
-        return False
+        BookSwapEvent.objects.create(
+            swap=self,
+            user=user,
+            type=BookSwapEvent.Type.ACCEPT,
+        )
 
     def complete(self, user: User):
         logger.debug("User %s attempting to complete swap %d", user, self.id)
@@ -314,103 +315,105 @@ class BookSwap(models.Model):
         if user != self.proposed_by:
             raise PermissionDenied("Only the proposer can complete this swap")
 
-        if self.status == self.Status.ACCEPTED:
-            self.status = self.Status.COMPLETED
-            self.save()
-
-            BookSwapEvent.objects.create(
-                swap=self,
-                user=user,
-                type=BookSwapEvent.Type.COMPLETE,
+        if self.status != self.Status.ACCEPTED:
+            raise ValidationError(
+                f"Cannot change swap status from {self.status} to {self.Status.COMPLETED}."  # noqa: E501
             )
 
-            # mark all involved books as swapped
-            for offered_listing in self.offered_listings.all():
-                offered_listing.status = BookListing.Status.SWAPPED
-                offered_listing.save()
+        self.status = self.Status.COMPLETED
+        self.save()
 
-            for requested_listing in self.requested_listings.all():
-                requested_listing.status = BookListing.Status.SWAPPED
-                requested_listing.save()
+        BookSwapEvent.objects.create(
+            swap=self,
+            user=user,
+            type=BookSwapEvent.Type.COMPLETE,
+        )
 
-            # cancel any other swaps involving these listings
-            book_in_swap = Q(offered_listings__in=self.offered_listings.all()) | Q(
-                requested_listings__in=self.requested_listings.all()
-            )
-            swap_open = Q(status=BookSwap.Status.PROPOSED) | Q(
-                status=BookSwap.Status.ACCEPTED
-            )
-            other_swaps = BookSwap.objects.filter(book_in_swap, swap_open).exclude(
-                id=self.id
-            )
+        # mark all involved books as swapped
+        for offered_listing in self.offered_listings.all():
+            offered_listing.status = BookListing.Status.SWAPPED
+            offered_listing.save()
 
-            for swap in other_swaps:
-                if swap.rescind():
-                    logger.info(
-                        "Rescinded swap %d due to completion of swap %d",
-                        swap.id,
-                        self.id,
-                    )
-                else:
-                    logger.warning(
-                        "Failed to rescind swap %d during completion of swap %d",
-                        swap.id,
-                        self.id,
-                    )
+        for requested_listing in self.requested_listings.all():
+            requested_listing.status = BookListing.Status.SWAPPED
+            requested_listing.save()
 
-            return True
+        # cancel any other swaps involving these listings
+        book_in_swap = Q(offered_listings__in=self.offered_listings.all()) | Q(
+            requested_listings__in=self.requested_listings.all()
+        )
+        swap_open = Q(status=BookSwap.Status.PROPOSED) | Q(
+            status=BookSwap.Status.ACCEPTED
+        )
+        other_swaps = BookSwap.objects.filter(book_in_swap, swap_open).exclude(
+            id=self.id
+        )
 
-        return False
+        for swap in other_swaps:
+            try:
+                swap.rescind()
+                logger.info(
+                    "Rescinded swap %d due to completion of swap %d",
+                    swap.id,
+                    self.id,
+                )
+            except ValidationError:
+                logger.warning(
+                    "Failed to rescind swap %d during completion of swap %d",
+                    swap.id,
+                    self.id,
+                )
 
     def rescind(self):
-        if self.status in [self.Status.PROPOSED, self.Status.ACCEPTED]:
-            self.status = self.Status.RESCINDED
-            self.save()
-
-            BookSwapEvent.objects.create(
-                swap=self,
-                user=None,
-                type=BookSwapEvent.Type.RESCIND,
+        if self.status not in [self.Status.PROPOSED, self.Status.ACCEPTED]:
+            raise ValidationError(
+                f"Cannot change swap status from {self.status} to {self.Status.RESCINDED}."  # noqa: E501
             )
 
-            return True
+        self.status = self.Status.RESCINDED
+        self.save()
 
-        return False
+        BookSwapEvent.objects.create(
+            swap=self,
+            user=None,
+            type=BookSwapEvent.Type.RESCIND,
+        )
 
     def decline(self, user: User):
         if user != self.proposed_to:
             raise PermissionDenied("Only the receiver can decline this swap")
 
-        if self.status == self.Status.PROPOSED:
-            self.status = self.Status.DECLINED
-            self.save()
-
-            BookSwapEvent.objects.create(
-                swap=self,
-                user=user,
-                type=BookSwapEvent.Type.DECLINE,
+        if self.status != self.Status.PROPOSED:
+            raise ValidationError(
+                f"Cannot change swap status from {self.status} to {self.Status.DECLINED}."  # noqa: E501
             )
 
-            return True
+        self.status = self.Status.DECLINED
+        self.save()
 
-        return False
+        BookSwapEvent.objects.create(
+            swap=self,
+            user=user,
+            type=BookSwapEvent.Type.DECLINE,
+        )
 
     def cancel(self, user: User):
         if user != self.proposed_by:
             raise PermissionDenied("Only the proposer can cancel this swap")
 
-        if self.status == self.Status.PROPOSED:
-            self.status = self.Status.CANCELLED
-            self.save()
-
-            BookSwapEvent.objects.create(
-                swap=self,
-                user=user,
-                type=BookSwapEvent.Type.CANCEL,
+        if self.status != self.Status.PROPOSED:
+            raise ValidationError(
+                f"Cannot change swap status from {self.status} to {self.Status.CANCELLED}."  # noqa: E501
             )
-            return True
 
-        return False
+        self.status = self.Status.CANCELLED
+        self.save()
+
+        BookSwapEvent.objects.create(
+            swap=self,
+            user=user,
+            type=BookSwapEvent.Type.CANCEL,
+        )
 
     def get_timeline(self):
         events = [{"type": "event", "item": event} for event in self.events.all()]

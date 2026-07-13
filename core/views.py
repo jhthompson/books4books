@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Prefetch, Q
@@ -360,10 +360,11 @@ def delete_listing(request: HttpRequest, id: int):
         return redirect("listings")
 
     if request.method == "POST":
-        if listing.remove():
+        try:
+            listing.remove()
             messages.success(request, "Listing deleted.")
             return redirect("listings")
-        else:
+        except ValidationError:
             messages.error(request, "Something went wrong.")
             return redirect("listings")
 
@@ -550,10 +551,11 @@ def cancel_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.method == "POST":
-        if swap.cancel(request.user):
+        try:
+            swap.cancel(request.user)
             messages.success(request, "Swap cancelled.")
             return redirect("swaps")
-        else:
+        except ValidationError:
             messages.error(request, "Something went wrong.")
             return redirect("swap", swap.id)
 
@@ -568,12 +570,13 @@ def accept_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.method == "POST":
-        if swap.accept(user=request.user):
+        try:
+            swap.accept(user=request.user)
             swap.notify(request, BookSwapEvent.Type.ACCEPT)
 
             return redirect("swap", swap.id)
-        else:
-            raise PermissionDenied()
+        except ValidationError as err:
+            raise PermissionDenied() from err
 
     return render(
         request,
@@ -590,10 +593,11 @@ def complete_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.method == "POST":
-        if swap.complete(user=request.user):
+        try:
+            swap.complete(user=request.user)
             return redirect("swap", swap.id)
-        else:
-            raise PermissionDenied()
+        except ValidationError as err:
+            raise PermissionDenied() from err
 
     return render(
         request,
@@ -612,9 +616,14 @@ def decline_swap(request: HttpRequest, id: int):
     if request.method == "POST":
         form = forms.Form(request.POST)
 
-        if form.is_valid() and swap.decline(user=request.user):
-            messages.success(request, "Swap declined.")
-            return redirect("swaps")
+        if form.is_valid():
+            try:
+                swap.decline(user=request.user)
+                messages.success(request, "Swap declined.")
+                return redirect("swaps")
+            except ValidationError:
+                messages.error(request, "Something went wrong.")
+                return redirect("swap", swap.id)
         else:
             messages.error(request, "Something went wrong.")
             return redirect("swap", swap.id)
@@ -663,16 +672,25 @@ def approve_pending_listings(request):
             )
 
         if action == "approve":
-            if listing.approve():
+            try:
+                listing.approve()
                 messages.success(
                     request,
                     f"Listing '{listing.title}' has been approved (marked as AVAILABLE).",  # noqa: E501
                 )
+            except ValidationError:
+                messages.error(request, "Listing is no longer pending.")
         elif action == "reject":
-            if listing.remove():
+            try:
+                listing.remove()
                 messages.success(
                     request,
                     f"Listing '{listing.title}' has been rejected (marked as REMOVED).",
+                )
+            except ValidationError:
+                messages.error(
+                    request,
+                    "Listing cannot be rejected from its current state.",
                 )
         else:
             return HttpResponseBadRequest("Invalid action.")
