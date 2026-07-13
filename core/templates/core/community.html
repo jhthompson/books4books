@@ -4,7 +4,7 @@
 <h1 class="center text-align:center color-primary">{{ community.name }}</h1>
 <p class="center">{{ community.description }}</p>
 
-Members:
+<h2 class="center">Members</h2>
 {% for member in community.members.all %}
     <p class="center">{{ member }}</p>
 {% endfor %}
