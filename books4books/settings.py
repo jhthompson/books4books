@@ -76,10 +76,7 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG:
-    INSTALLED_APPS += [
-        "debug_toolbar",
-        "mail_panel",
-    ]
+    INSTALLED_APPS += ["debug_toolbar"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -191,9 +188,6 @@ DEFAULT_FROM_EMAIL = "Books4Books <noreply@books4books.org>"
 SERVER_EMAIL = "Books4Books <noreply@books4books.org>"
 ADMINS = [("Admin", "admin@books4books.org")]
 
-if DEBUG:
-    EMAIL_BACKEND = "mail_panel.backend.MailToolbarBackend"
-
 # django-allauth
 
 ACCOUNT_UNIQUE_EMAIL = True
@@ -202,31 +196,16 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
 
-# django-debug-toolbar
-if DEBUG:
-    DEBUG_TOOLBAR_PANELS = [
-        "debug_toolbar.panels.history.HistoryPanel",
-        "debug_toolbar.panels.versions.VersionsPanel",
-        "debug_toolbar.panels.timer.TimerPanel",
-        "mail_panel.panels.MailToolbarPanel",
-        "debug_toolbar.panels.settings.SettingsPanel",
-        "debug_toolbar.panels.headers.HeadersPanel",
-        "debug_toolbar.panels.request.RequestPanel",
-        "debug_toolbar.panels.sql.SQLPanel",
-        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-        "debug_toolbar.panels.templates.TemplatesPanel",
-        "debug_toolbar.panels.cache.CachePanel",
-        "debug_toolbar.panels.signals.SignalsPanel",
-        "debug_toolbar.panels.logging.LoggingPanel",
-        "debug_toolbar.panels.redirects.RedirectsPanel",
-        "debug_toolbar.panels.profiling.ProfilingPanel",
-    ]
 
 # anymail
 ANYMAIL = {
     "MAILGUN_API_KEY": os.getenv("MAILGUN_API_KEY"),
 }
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_BACKEND = (
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else os.getenv("EMAIL_BACKEND")
+)
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL")

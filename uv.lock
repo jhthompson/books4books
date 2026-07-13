@@ -33,7 +33,6 @@ dependencies = [
 dev = [
     { name = "djade" },
     { name = "django-debug-toolbar" },
-    { name = "django-mail-panel" },
     { name = "ruff" },
 ]
 
@@ -56,7 +55,6 @@ requires-dist = [
 dev = [
     { name = "djade", specifier = "==1.9.0" },
     { name = "django-debug-toolbar", specifier = "==7.0.0" },
-    { name = "django-mail-panel", specifier = "==6.0.0" },
     { name = "ruff", specifier = "==0.15.21" },
 ]
 
@@ -204,18 +202,6 @@ dependencies = [
     { name = "six" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e1/30/17416fd29134deba92fe4eb0e266dc05e852f1fcf8370086ce464e47dff3/django-isbn-field-0.5.3.tar.gz", hash = "sha256:a6c4d4de37a2025b7f8522f854a1be69abe8e50b049129eec9cb7091c1a4d1a8", size = 6942, upload-time = "2021-12-07T22:38:35.481Z" }
-
-[[package]]
-name = "django-mail-panel"
-version = "6.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django-debug-toolbar" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/b9/2e13d3fa539444071da567599f0317bd056fc0d68440ab8a093fb1d87828/django_mail_panel-6.0.0.tar.gz", hash = "sha256:b287673758f9e2275e694f0b76f4fab2317d3c6ec6eb876450160bd90796c18b", size = 15581, upload-time = "2026-06-03T19:13:34.782Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/71/df/431d87d1fd85fd1674d6bdac4fb98abc1ba0707a24503def8cc99212a46c/django_mail_panel-6.0.0-py3-none-any.whl", hash = "sha256:0e4cad477791af48f275e19096b312d29bc2eec47aef3d160fcba06baf58563f", size = 17666, upload-time = "2026-06-03T19:13:33.737Z" },
-]
 
 [[package]]
 name = "gunicorn"
