@@ -30,3 +30,11 @@
   - [x] Upload picture of barcode? 
 - [ ] Add a "wishlist" of books you want, and notify when those become available
   - [ ] Probably want same search by ISBN or title to make sure matches are exact
+
+- [ ] Communities
+  - [ ] Create community
+  - [ ] Easy way to share community
+    - [ ] QR code that will link you to the signup page
+  - [ ] Community permissions, just 2 to start with (maybe UNLISTED in future)
+    - PUBLIC
+    - PRIVATE

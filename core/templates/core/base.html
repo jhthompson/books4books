@@ -23,6 +23,7 @@
                 <li><a href="{% url 'index' %}">Home</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'listings' %}">Listings</a></li>
+                    <li><a href="{% url 'communities' %}">Communities</a></li>
                     <li><a href="{% url 'swaps' %}" {% if open_swaps_count %}data-badge-count="{{ open_swaps_count }}"{% endif %}>Swaps</a></li>
                     <li class="right"><a href="{% url 'profile' user.id %}">Profile</a></li>
                     <li>
