@@ -34,12 +34,16 @@ class Community(models.Model):
 
 
 class CommunityMembership(models.Model):
+    class PermissionLevel(models.TextChoices):
+        ADMIN = "ADMIN", "Admin"
+        MEMBER = "MEMBER", "Member"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     permission_level = models.CharField(
         max_length=10,
-        choices=[("ADMIN", "Admin"), ("MEMBER", "Member")],
-        default="MEMBER",
+        choices=PermissionLevel.choices,
+        default=PermissionLevel.MEMBER,
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
