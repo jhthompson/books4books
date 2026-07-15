@@ -99,6 +99,17 @@ def new_community(request: HttpRequest):
 def community(request: HttpRequest, id: int):
     community = get_object_or_404(Community, id=id)
     context = {"community": community}
+
+    admins = CommunityMembership.objects.filter(
+        community=community, permission_level=CommunityMembership.PermissionLevel.ADMIN
+    ).select_related("user")
+    context["admins"] = admins
+
+    members = CommunityMembership.objects.filter(
+        community=community, permission_level=CommunityMembership.PermissionLevel.MEMBER
+    ).select_related("user")
+    context["members"] = members
+
     return render(request, "core/community.html", context)
 
 

@@ -4,8 +4,15 @@
 <h1 class="center text-align:center color-primary">{{ community.name }}</h1>
 <p class="center">{{ community.description }}</p>
 
+<h2 class="center">Admins</h2>
+{% for admin in admins %}
+    <p class="center">{{ admin.user }}</p>
+{% endfor %}
+
 <h2 class="center">Members</h2>
-{% for member in community.members.all %}
-    <p class="center">{{ member }}</p>
+{% for member in members %}
+    <p class="center">{{ member.user }}</p>
+{% empty %}
+    <p class="center font-style:italic">No members yet.</p>
 {% endfor %}
 {% endblock main %}
