@@ -20,6 +20,7 @@ from core.forms import (
     BookListingSelectionFormSet,
     EditProfileForm,
     IsbnForm,
+    ListingCommunitiesForm,
     NewBookListingForm,
     NewCommunityForm,
 )
@@ -345,10 +346,8 @@ def new_listing(request: HttpRequest):
 
 @login_required
 def listing(request: HttpRequest, id: int):
-    context = {}
-
     try:
-        context["listing"] = BookListing.objects.get(
+        listing = BookListing.objects.get(
             id=id,
             owner=request.user,
             status__in=[BookListing.Status.AVAILABLE, BookListing.Status.PENDING],
@@ -356,7 +355,19 @@ def listing(request: HttpRequest, id: int):
     except BookListing.DoesNotExist:
         return redirect("listings")
 
-    return render(request, "core/listing.html", context)
+    if request.method == "POST":
+        form = ListingCommunitiesForm(request.POST, user=request.user)
+        if form.is_valid():
+            listing.communities.set(form.cleaned_data["communities"])
+            messages.success(request, "Listing communities updated.")
+            return redirect("listing", id=listing.id)
+    else:
+        form = ListingCommunitiesForm(
+            user=request.user,
+            initial={"communities": listing.communities.all()},
+        )
+
+    return render(request, "core/listing.html", {"listing": listing, "form": form})
 
 
 @login_required

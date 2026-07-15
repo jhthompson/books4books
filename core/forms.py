@@ -3,7 +3,7 @@ from isbn_field.validators import ISBNValidator
 from django import forms
 from django.core.exceptions import ValidationError
 
-from core.models import BookListing, Genre
+from core.models import BookListing, Community, Genre
 
 
 class EditProfileForm(forms.Form):
@@ -114,3 +114,16 @@ class BookListingSelectionForm(forms.Form):
                 owner=owner, status=BookListing.Status.AVAILABLE
             )
             self.fields["book_listings"].label = f"{owner.username}'s books"
+
+
+class ListingCommunitiesForm(forms.Form):
+    communities = forms.ModelMultipleChoiceField(
+        label="Listed in",
+        queryset=Community.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+
+    def __init__(self, *args, user, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["communities"].queryset = user.communities.order_by("name")
