@@ -57,7 +57,14 @@ def index(request: HttpRequest):
 
 
 def communities(request: HttpRequest):
-    context = {}
+    communities = Community.objects.order_by("name")
+    context = {"communities": communities}
+
+    if request.user.is_authenticated:
+        user_communities = request.user.communities.order_by("name")
+        context["user_communities"] = user_communities
+        context["communities"] = communities.exclude(members=request.user)
+
     return render(request, "core/communities.html", context)
 
 
