@@ -108,15 +108,15 @@ def community(request: HttpRequest, id: int):
     community = get_object_or_404(Community, id=id)
     context = {"community": community}
 
-    admins = CommunityMembership.objects.filter(
+    num_admins = CommunityMembership.objects.filter(
         community=community, permission_level=CommunityMembership.PermissionLevel.ADMIN
-    ).select_related("user")
-    context["admins"] = admins
+    ).count()
+    context["num_admins"] = num_admins
 
-    members = CommunityMembership.objects.filter(
+    num_members = CommunityMembership.objects.filter(
         community=community, permission_level=CommunityMembership.PermissionLevel.MEMBER
-    ).select_related("user")
-    context["members"] = members
+    ).count()
+    context["num_members"] = num_members
 
     recent_listings = BookListing.objects.filter(
         communities=community, status=BookListing.Status.AVAILABLE
