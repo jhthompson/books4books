@@ -118,6 +118,11 @@ def community(request: HttpRequest, id: int):
     ).select_related("user")
     context["members"] = members
 
+    recent_listings = BookListing.objects.filter(
+        communities=community, status=BookListing.Status.AVAILABLE
+    ).order_by("-created_at")[:10]
+    context["recent_listings"] = recent_listings
+
     return render(request, "core/community.html", context)
 
 
