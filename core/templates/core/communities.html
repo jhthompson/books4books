@@ -1,31 +1,35 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1 class="center text-align:center color-primary">Communities</h1>
-{% if user.is_authenticated %}
-<section class="center">
-    <h2>Your Communities</h2>
-    <ul>
-        {% for community in user_communities %}
+<div class="stack">
+    <h1 class="center text-align:center color-primary">Communities</h1>
+    <a class="center button" href="{% url 'new_community' %}">Create a Community</a>
+
+    {% if user.is_authenticated %}
+    <section class="center">
+        <h2>Your Communities</h2>
+        <ul>
+            {% for community in user_communities %}
+            <li>
+                <a href="{% url 'community' community.id %}">{{ community.name }}</a>
+            </li>
+            {% empty %}
+            <li class="font-style:italic">You have not joined any communities.</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    <section class="center">
+        {% if user.is_authenticated %}<h2>Public Communities</h2>{% endif %}
+    <ul class="center">
+        {% for community in communities %}
         <li>
             <a href="{% url 'community' community.id %}">{{ community.name }}</a>
         </li>
         {% empty %}
-        <li class="font-style:italic">You have not joined any communities.</li>
+        <li class="font-style:italic">No communities found.</li>
         {% endfor %}
     </ul>
-</section>
-{% endif %}
-<section class="center">
-    {% if user.is_authenticated %}<h2>Public Communities</h2>{% endif %}
-<ul class="center">
-    {% for community in communities %}
-    <li>
-        <a href="{% url 'community' community.id %}">{{ community.name }}</a>
-    </li>
-    {% empty %}
-    <li class="font-style:italic">No communities found.</li>
-    {% endfor %}
-</ul>
-</section>
+    </section>
+</div>
 {% endblock main %}
