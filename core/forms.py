@@ -13,6 +13,11 @@ class EditProfileForm(forms.Form):
 class NewCommunityForm(forms.Form):
     name = forms.CharField(max_length=255)
     description = forms.CharField(max_length=1000)
+    visibility = forms.ChoiceField(
+        choices=Community.Visibility.choices,
+        initial=Community.Visibility.PUBLIC,
+        help_text="Public communities are open to all. Private communities require a join request and admin approval.",
+    )
 
 
 class IsbnForm(forms.Form):

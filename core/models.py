@@ -19,8 +19,17 @@ class Community(models.Model):
     class Meta:
         verbose_name_plural = "Communities"
 
+    class Visibility(models.TextChoices):
+        PUBLIC = "PUBLIC", "Public"
+        PRIVATE = "PRIVATE", "Private"
+
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
+    visibility = models.CharField(
+        max_length=10,
+        choices=Visibility,
+        default=Visibility.PUBLIC,
+    )
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,7 +51,7 @@ class CommunityMembership(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     permission_level = models.CharField(
         max_length=10,
-        choices=PermissionLevel.choices,
+        choices=PermissionLevel,
         default=PermissionLevel.MEMBER,
     )
 
@@ -146,7 +155,7 @@ class BookListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=9,
-        choices=Status.choices,
+        choices=Status,
         default=Status.PENDING,
     )
     communities = models.ManyToManyField(
@@ -232,9 +241,7 @@ class BookSwap(models.Model):
         BookListing, related_name="requested_listings"
     )
 
-    status = models.CharField(
-        max_length=9, choices=Status.choices, default=Status.PROPOSED
-    )
+    status = models.CharField(max_length=9, choices=Status, default=Status.PROPOSED)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -436,7 +443,7 @@ class BookSwapEvent(models.Model):
 
     swap = models.ForeignKey(BookSwap, on_delete=models.CASCADE, related_name="events")
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    type = models.CharField(max_length=8, choices=Type.choices)
+    type = models.CharField(max_length=8, choices=Type)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
