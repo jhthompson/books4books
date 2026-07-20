@@ -132,3 +132,12 @@ class ListingCommunitiesForm(forms.Form):
     def __init__(self, *args, user, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["communities"].queryset = user.communities.order_by("name")
+
+
+class JoinPrivateCommunityForm(forms.Form):
+    message = forms.CharField(
+        label="Introduce yourself",
+        widget=forms.Textarea(attrs={"class": "width:100"}),
+        required=True,
+        help_text="Explain your connection to the community so the admins can understand your request.",
+    )

@@ -20,6 +20,7 @@ from core.forms import (
     BookListingSelectionFormSet,
     EditProfileForm,
     IsbnForm,
+    JoinPrivateCommunityForm,
     ListingCommunitiesForm,
     NewBookListingForm,
     NewCommunityForm,
@@ -30,6 +31,7 @@ from core.models import (
     BookSwapEvent,
     Community,
     CommunityMembership,
+    CommunityMembershipRequest,
     Genre,
     OpenLibraryAuthor,
 )
@@ -76,12 +78,14 @@ def new_community(request: HttpRequest):
         if form.is_valid():
             name = form.cleaned_data.get("name")
             description = form.cleaned_data.get("description")
+            visibility = form.cleaned_data.get("visibility")
 
             with transaction.atomic():
                 community = Community.objects.create(
                     name=name,
                     description=description,
                     created_by=request.user,
+                    visibility=visibility,
                 )
                 CommunityMembership.objects.create(
                     user=request.user,
@@ -123,7 +127,79 @@ def community(request: HttpRequest, id: int):
     ).order_by("-created_at")[:10]
     context["recent_listings"] = recent_listings
 
+    in_community = community.is_in(request.user)
+    context["in_community"] = in_community
+
     return render(request, "core/community.html", context)
+
+
+def join_community(request: HttpRequest, id: int):
+    community = get_object_or_404(Community, id=id)
+
+    if not request.user.is_authenticated:
+        messages.error(request, "You must be logged in to join a community.")
+        return redirect("community", id=community.id)
+
+    if community.is_in(request.user):
+        messages.info(request, "You are already a member of this community.")
+        return redirect("community", id=community.id)
+
+    if community.is_private():
+        return _join_private_community(request, community)
+    else:
+        return _join_public_community(request, community)
+
+
+def _join_public_community(request: HttpRequest, community: Community):
+
+    CommunityMembership.objects.create(
+        user=request.user,
+        community=community,
+        permission_level=CommunityMembership.PermissionLevel.MEMBER,
+    )
+
+    messages.success(request, f"You have joined the community '{community.name}'.")
+    return redirect("community", id=community.id)
+
+
+def _join_private_community(request: HttpRequest, community: Community):
+
+    if request.method == "POST":
+        if CommunityMembershipRequest.objects.filter(
+            user=request.user,
+            community=community,
+            status=CommunityMembershipRequest.Status.PENDING,
+        ).exists():
+            messages.info(
+                request, "You already have a pending request to join this community."
+            )
+            return redirect("community", id=community.id)
+
+        form = JoinPrivateCommunityForm(request.POST)
+
+        if form.is_valid():
+            message = form.cleaned_data.get("message")
+
+            CommunityMembershipRequest.objects.create(
+                user=request.user,
+                community=community,
+                status=CommunityMembershipRequest.Status.PENDING,
+                message=message,
+            )
+
+            messages.success(
+                request,
+                f"Your request to join the community '{community.name}' has been sent.",
+            )
+            return redirect("community", id=community.id)
+    else:
+        form = JoinPrivateCommunityForm()
+
+    return render(
+        request,
+        "core/join_private_community.html",
+        {"form": form, "community": community},
+    )
 
 
 def profile(request: HttpRequest, id: int):

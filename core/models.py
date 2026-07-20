@@ -38,8 +38,62 @@ class Community(models.Model):
         User, through="CommunityMembership", related_name="communities"
     )
 
+    def is_private(self) -> bool:
+        return self.visibility == self.Visibility.PRIVATE
+
+    def is_in(self, user: User | None) -> bool:
+        """Check if a user is a member of the community."""
+        if not user or not user.is_authenticated:
+            return False
+
+        return self.members.filter(id=user.id).exists()
+
     def __str__(self):
         return self.name
+
+
+class CommunityMembershipRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    message = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        APPROVED = "APPROVED", "Approved"
+        REJECTED = "REJECTED", "Rejected"
+
+    status = models.CharField(
+        max_length=8,
+        choices=Status,
+        default=Status.PENDING,
+    )
+
+    def approve(self):
+        if self.status != self.Status.PENDING:
+            raise ValidationError(
+                f"Cannot change membership request status from {self.status} to {self.Status.APPROVED}."  # noqa: E501
+            )
+
+        self.status = self.Status.APPROVED
+        self.save(update_fields=["status"])
+
+        CommunityMembership.objects.create(
+            user=self.user,
+            community=self.community,
+            permission_level=CommunityMembership.PermissionLevel.MEMBER,
+        )
+
+    def reject(self):
+        if self.status != self.Status.PENDING:
+            raise ValidationError(
+                f"Cannot change membership request status from {self.status} to {self.Status.REJECTED}."  # noqa: E501
+            )
+
+        self.status = self.Status.REJECTED
+        self.save(update_fields=["status"])
 
 
 class CommunityMembership(models.Model):

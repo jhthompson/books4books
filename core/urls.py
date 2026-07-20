@@ -9,6 +9,12 @@ urlpatterns = [
     path("communities", views.communities, name="communities"),
     path("communities/new", views.new_community, name="new_community"),
     path("communities/<int:id>", views.community, name="community"),
+    # community membership
+    path(
+        "communities/<int:id>/join",
+        views.join_community,
+        name="join_community",
+    ),
     # listings
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),

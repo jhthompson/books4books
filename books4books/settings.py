@@ -39,7 +39,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = [] if DEBUG else [os.getenv("ALLOWED_HOST", "")]
+ALLOWED_HOSTS = (
+    ["192.168.2.235", "localhost"] if DEBUG else [os.getenv("ALLOWED_HOST", "")]
+)
 
 if DEBUG:
     INTERNAL_IPS = [

@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1 class="center text-align:center color-primary">Request to Join Community</h1>
+<form class="center stack" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div class="display:flex justify-content:flex-end">
+        <input class="button" type="submit" value="Submit Request">
+    </div>
+</form>
+{% endblock main %}

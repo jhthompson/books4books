@@ -1,11 +1,19 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1 class="center text-align:center color-primary">{{ community.name }}</h1>
-<p class="center">{{ community.description }}</p>
-<p class="center color:muted font-style:italic">{{ num_admins }} admin{{ num_admins|pluralize }} &middot; {{ num_members }} member{{ num_members|pluralize }}</p>
+<div class="stack">
+    <div>
+        <h1 class="center text-align:center color-primary">{{ community.name }}</h1>
+        <p class="center">{{ community.description }}</p>
+        <p class="center color:muted font-style:italic">{{ num_admins }} admin{{ num_admins|pluralize }} &middot; {{ num_members }} member{{ num_members|pluralize }}</p>
+    </div>
+    {% if not in_community %}
+    <a class="button center" href="{% url 'join_community' community.id %}">
+        <i class="bi bi-person-plus margin-inline-end:s-2"></i>Join Community
+    </a>
+    {% endif %}
 
-<h2 class="center">Recent Listings</h2>
+    <h2 class="center">Recent Listings</h2>
     <ul class="reel padding:0" style="--space: var(--s-1);">
         {% for listing in recent_listings %}
             <li class="list-style:none">
@@ -26,4 +34,5 @@
             <li class="center list-style:none color:muted font-style:italic">No new listings.</li>
         {% endfor %}
     </ul>
+</div>
 {% endblock main %}
