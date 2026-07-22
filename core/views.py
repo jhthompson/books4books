@@ -46,12 +46,28 @@ logger = logging.getLogger(__name__)
 def index(request: HttpRequest):
     context = {}
 
-    listings = BookListing.objects.filter(status=BookListing.Status.AVAILABLE).order_by(
-        "-created_at"
+    listings = (
+        BookListing.objects.filter(
+            status=BookListing.Status.AVAILABLE,
+            communities__isnull=False,
+        )
+        .distinct()
+        .order_by("-created_at")
     )
 
     if request.user.is_authenticated:
         listings = listings.exclude(owner=request.user)
+        swap_communities = Community.objects.filter(members=request.user)
+    else:
+        swap_communities = Community.objects.none()
+
+    listings = listings.prefetch_related(
+        Prefetch(
+            "communities",
+            queryset=swap_communities,
+            to_attr="swap_communities",
+        )
+    )
 
     context["listings"] = listings
 
@@ -494,8 +510,12 @@ def swaps(request: HttpRequest):
     is_user_involved = Q(proposed_by=request.user) | Q(proposed_to=request.user)
     is_open = Q(status=BookSwap.Status.PROPOSED) | Q(status=BookSwap.Status.ACCEPTED)
 
-    involved_pending_swaps = BookSwap.objects.filter(is_user_involved & is_open)
-    involved_closed_swaps = BookSwap.objects.filter(is_user_involved & ~is_open)
+    involved_pending_swaps = BookSwap.objects.filter(
+        is_user_involved & is_open
+    ).select_related("community")
+    involved_closed_swaps = BookSwap.objects.filter(
+        is_user_involved & ~is_open
+    ).select_related("community")
 
     context["pending_swaps"] = involved_pending_swaps.order_by(
         "-created_at"
@@ -529,15 +549,17 @@ def swaps(request: HttpRequest):
 
 
 @login_required
-def new_swap(request: HttpRequest):
+def new_swap(request: HttpRequest, community_id: int):
+    community = get_object_or_404(Community, id=community_id, members=request.user)
     proposed_by = request.user
     proposed_to_id = request.GET.get("proposed_to")
-    proposed_to = User.objects.get(id=proposed_to_id)
+    proposed_to = get_object_or_404(User, id=proposed_to_id, communities=community)
     requested_book_listing_ids = request.GET.getlist("requested_book_listing_ids")
     requested_book_listings = BookListing.objects.filter(
         id__in=requested_book_listing_ids,
         owner=proposed_to,
         status=BookListing.Status.AVAILABLE,
+        communities=community,
     )
 
     if proposed_by == proposed_to:
@@ -552,25 +574,27 @@ def new_swap(request: HttpRequest):
         formset = FormSetFactory(
             request.POST,
             owners=[proposed_to, proposed_by],
+            community=community,
         )
 
         if formset.is_valid():
             requested_book_listings = formset.cleaned_data[0]["book_listings"]
             offered_book_listings = formset.cleaned_data[1]["book_listings"]
 
-            book_swap = BookSwap.objects.create(
-                proposed_by=proposed_by,
-                proposed_to=proposed_to,
-            )
-            book_swap.offered_listings.set(offered_book_listings)
-            book_swap.requested_listings.set(requested_book_listings)
-            book_swap.save()
+            with transaction.atomic():
+                book_swap = BookSwap.objects.create(
+                    community=community,
+                    proposed_by=proposed_by,
+                    proposed_to=proposed_to,
+                )
+                book_swap.offered_listings.set(offered_book_listings)
+                book_swap.requested_listings.set(requested_book_listings)
 
-            BookSwapEvent.objects.create(
-                swap=book_swap,
-                user=proposed_by,
-                type=BookSwapEvent.Type.PROPOSE,
-            )
+                BookSwapEvent.objects.create(
+                    swap=book_swap,
+                    user=proposed_by,
+                    type=BookSwapEvent.Type.PROPOSE,
+                )
 
             book_swap.notify(request, BookSwapEvent.Type.PROPOSE)
 
@@ -585,6 +609,7 @@ def new_swap(request: HttpRequest):
         )
         formset = BookListingSelectionFormSetFactory(
             owners=[proposed_to, proposed_by],
+            community=community,
             initial=[
                 {"book_listings": requested_book_listings},
                 {"book_listings": []},
@@ -594,6 +619,7 @@ def new_swap(request: HttpRequest):
     context = {}
     context["formset"] = formset
     context["proposed_to"] = proposed_to
+    context["community"] = community
 
     return render(request, "core/new_swap.html", context)
 

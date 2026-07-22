@@ -2,6 +2,7 @@
 
 {% block main %}
 <h1 class="center text-align:center color-primary">Propose Swap with {{ proposed_to.username }}</h1>
+<p class="center text-align:center">In {{ community.name }}</p>
 
 <form class="center" method="post">
     {% csrf_token %}

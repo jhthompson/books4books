@@ -16,7 +16,10 @@ class NewCommunityForm(forms.Form):
     visibility = forms.ChoiceField(
         choices=Community.Visibility.choices,
         initial=Community.Visibility.PUBLIC,
-        help_text="Public communities are open to all. Private communities require a join request and admin approval.",
+        help_text=(
+            "Public communities are open to all. Private communities require a join "
+            "request and admin approval."
+        ),
     )
 
 
@@ -93,14 +96,15 @@ class NewBookListingForm(forms.Form):
 
 class BookListingSelectionFormSet(forms.BaseFormSet):
     def __init__(self, *args, **kwargs):
-        owners = kwargs.pop("owners", [])
+        self.owners = kwargs.pop("owners", [])
+        self.community = kwargs.pop("community")
         super().__init__(*args, **kwargs)
-        self.owners = owners
 
     def get_form_kwargs(self, form_index):
         form_kwargs = super().get_form_kwargs(form_index)
         if form_index < len(self.owners):
             form_kwargs["owner"] = self.owners[form_index]
+            form_kwargs["community"] = self.community
         return form_kwargs
 
 
@@ -113,10 +117,13 @@ class BookListingSelectionForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         owner = kwargs.pop("owner", None)
+        community = kwargs.pop("community", None)
         super().__init__(*args, **kwargs)
-        if owner:
+        if owner and community:
             self.fields["book_listings"].queryset = BookListing.objects.filter(
-                owner=owner, status=BookListing.Status.AVAILABLE
+                owner=owner,
+                status=BookListing.Status.AVAILABLE,
+                communities=community,
             )
             self.fields["book_listings"].label = f"{owner.username}'s books"
 
@@ -139,5 +146,8 @@ class JoinPrivateCommunityForm(forms.Form):
         label="Introduce yourself",
         widget=forms.Textarea(attrs={"class": "width:100"}),
         required=True,
-        help_text="Explain your connection to the community so the admins can understand your request.",
+        help_text=(
+            "Explain your connection to the community so the admins can understand "
+            "your request."
+        ),
     )

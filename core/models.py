@@ -287,6 +287,11 @@ class BookSwap(models.Model):
     proposed_to = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="proposed_to"
     )
+    community = models.ForeignKey(
+        Community,
+        on_delete=models.CASCADE,
+        related_name="swaps",
+    )
 
     offered_listings = models.ManyToManyField(
         BookListing, related_name="offered_listings"
@@ -305,6 +310,29 @@ class BookSwap(models.Model):
 
     def get_absolute_url(self):
         return reverse("swap", kwargs={"id": self.pk})
+
+    def has_valid_community_listings(self) -> bool:
+        participants_are_members = self.community.members.filter(
+            id__in=[self.proposed_by_id, self.proposed_to_id]
+        ).count() == 2
+        offered_are_available = not self.offered_listings.exclude(
+            owner=self.proposed_by,
+            status=BookListing.Status.AVAILABLE,
+            communities=self.community,
+        ).exists()
+        requested_are_available = not self.requested_listings.exclude(
+            owner=self.proposed_to,
+            status=BookListing.Status.AVAILABLE,
+            communities=self.community,
+        ).exists()
+
+        return (
+            participants_are_members
+            and self.offered_listings.exists()
+            and self.requested_listings.exists()
+            and offered_are_available
+            and requested_are_available
+        )
 
     def notify(self, request: HttpRequest, event_type: "BookSwapEvent.Type"):
         match event_type:
@@ -359,6 +387,11 @@ class BookSwap(models.Model):
         if self.status != self.Status.PROPOSED:
             raise ValidationError(
                 f"Cannot change swap status from {self.status} to {self.Status.ACCEPTED}."  # noqa: E501
+            )
+
+        if not self.has_valid_community_listings():
+            raise ValidationError(
+                "All books and participants must still belong to the swap's community."
             )
 
         self.status = self.Status.ACCEPTED

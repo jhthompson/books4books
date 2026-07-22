@@ -9,6 +9,9 @@
         <ul class="center stack padding:0" style="--space: 1rem">
             {% for swap in pending_swaps %}
                 <li class="box list-style:none">
+                    <small class="display:block"><i class="bi bi-shop"></i>
+                        <a href="{% url 'community' swap.community.id %}">{{ swap.community.name }}</a>
+                    </small>
                     <a href="{% url 'swap' swap.id %}">
                         {% for listing in swap.offered_listings.all %}
                             {{ listing.title }}{% if not forloop.last %}, {% endif %}
@@ -39,6 +42,7 @@
         <ul class="center stack padding:0" style="--space: 1rem">
             {% for swap in closed_swaps %}
                 <li class="box list-style:none">
+                    <small class="display:block">{{ swap.community.name }}</small>
                     <a href="{% url 'swap' swap.id %}">
                         {% for listing in swap.requested_listings.all %}
                             {{ listing.title }}{% if not forloop.last %}, {% endif %}

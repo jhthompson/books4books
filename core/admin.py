@@ -50,3 +50,5 @@ class BookSwapMessageInline(admin.TabularInline):
 @admin.register(BookSwap)
 class BookSwapAdmin(admin.ModelAdmin):
     inlines = [BookSwapEventInline, BookSwapMessageInline]
+    list_display = ("id", "community", "proposed_by", "proposed_to", "status")
+    list_filter = ("community", "status")

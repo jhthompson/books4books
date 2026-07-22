@@ -3,6 +3,7 @@
 {% block main %}
 
 <div class="stack center">
+    <p>Swap proposed in <a href="{% url 'community' swap.community.id %}">{{ swap.community.name }}</a></p> 
     <div style="display: flex; justify-content: space-between; align-items: start;">
         <div>
             <h2>{{ them.username }}'s books</h2>

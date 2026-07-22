@@ -32,7 +32,11 @@ urlpatterns = [
     path("listings/<int:id>/delete", views.delete_listing, name="delete_listing"),
     # swaps
     path("swaps", views.swaps, name="swaps"),
-    path("swaps/new", views.new_swap, name="new_swap"),
+    path(
+        "communities/<int:community_id>/swaps/new",
+        views.new_swap,
+        name="new_swap",
+    ),
     path("swaps/<int:id>", views.swap, name="swap"),
     path("swaps/<int:id>/messages", views.swap_messages, name="swap_messages"),
     path("swaps/<int:id>/cancel", views.cancel_swap, name="cancel_swap"),
