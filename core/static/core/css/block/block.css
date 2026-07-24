@@ -12,6 +12,14 @@
     }
 }
 
+.site-header {
+    margin-inline: calc(var(--s0) * -1);
+    margin-block-start: calc(var(--s0) * -1);
+    padding: var(--s-1) var(--s0);
+    background: color-mix(in oklab, var(--primary-background) 60%, white);
+    border-block: 1px solid color-mix(in oklab, var(--primary) 18%, white);
+}
+
 .navbar {
     display: flex;
     justify-content: flex-start;
