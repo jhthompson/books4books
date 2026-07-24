@@ -75,30 +75,28 @@
     display: block;
     width: fit-content;
     text-align: center;
-    padding: 12px 24px;
-    background: #000;
+    padding: 10px 16px;
+    background: var(--primary);
     color: #fff;
+    border: 1px solid color-mix(in oklab, var(--primary) 70%, black);
     text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 6px 6px 0 var(--primary);
+    font-weight: 600;
     font-size: 14px;
-    letter-spacing: 1px;
-    transition: all 0.1s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    cursor: pointer;
 
     &:visited {
         color: #fff;
     }
 
     &:hover {
+        background: color-mix(in oklab, var(--primary) 88%, white);
+        border-color: color-mix(in oklab, var(--primary) 75%, black);
         color: #fff;
-        transform: translate(3px, 3px);
-        box-shadow: 3px 3px 0 var(--primary);
     }
 
     &:active {
-        transform: translate(6px, 6px);
-        box-shadow: none;
+        background: color-mix(in oklab, var(--primary) 80%, black);
     }
 }
 
