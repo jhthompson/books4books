@@ -7,7 +7,7 @@ Trade books nearby.
 ### Prerequisites
 
 - Python 3.13+
-- PostgreSQL with PostGIS extension
+- PostgreSQL
 - [uv](https://docs.astral.sh/uv/) package manager
 - [just](https://github.com/casey/just) command runner
 
