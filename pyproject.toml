@@ -22,7 +22,7 @@ dependencies = [
 dev = [
     "djade==1.9.0",
     "django-debug-toolbar==7.0.0",
-    "ruff==0.15.21",
+    "ruff==0.16.0",
 ]
 
 [tool.ruff]
