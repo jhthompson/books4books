@@ -15,7 +15,7 @@ dependencies = [
     "psycopg==3.3.4",
     "python-dotenv==1.2.2",
     "sentry-sdk[django]==2.66.1",
-    "zxing-cpp==3.1.0",
+    "zxing-cpp==3.1.1",
 ]
 
 [dependency-groups]
