@@ -108,6 +108,25 @@
     }
 }
 
+.button.button--destructive {
+    background: oklch(0.55 0.18 25);
+    border-color: color-mix(in oklab, oklch(0.55 0.18 25) 72%, black);
+
+    &:visited {
+        color: #fff;
+    }
+
+    &:hover {
+        background: color-mix(in oklab, oklch(0.55 0.18 25) 88%, white);
+        border-color: color-mix(in oklab, oklch(0.55 0.18 25) 75%, black);
+        color: #fff;
+    }
+
+    &:active {
+        background: color-mix(in oklab, oklch(0.55 0.18 25) 80%, black);
+    }
+}
+
 /* Speech Bubble mostly from: https://codepen.io/MarkBoots/pen/RwLPXgJ */
 
 [speech-bubble],

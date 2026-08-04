@@ -8,9 +8,18 @@
         <p class="center color:muted font-style:italic">{{ num_admins }} admin{{ num_admins|pluralize }} &middot; {{ num_members }} member{{ num_members|pluralize }}</p>
     </div>
     {% if not in_community %}
-    <a class="button center" href="{% url 'join_community' community.id %}">
-        <i class="bi bi-person-plus margin-inline-end:s-2"></i>Join Community
-    </a>
+    <div class="center">
+        <a class="button" href="{% url 'join_community' community.id %}">
+            <i class="bi bi-person-plus margin-inline-end:s-2"></i>Join Community
+        </a>
+    </div>
+    {% else %}
+    <form class="center" method="post" action="{% url 'leave_community' community.id %}">
+        {% csrf_token %}
+        <button class="button button--destructive" type="submit">
+            <i class="bi bi-box-arrow-right margin-inline-end:s-2"></i>Leave Community
+        </button>
+    </form>
     {% endif %}
 
     <h2 class="center">Recent Listings</h2>

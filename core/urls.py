@@ -15,6 +15,11 @@ urlpatterns = [
         views.join_community,
         name="join_community",
     ),
+    path(
+        "communities/<int:id>/leave",
+        views.leave_community,
+        name="leave_community",
+    ),
     # listings
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),

@@ -166,6 +166,27 @@ def join_community(request: HttpRequest, id: int):
         return _join_public_community(request, community)
 
 
+@login_required
+def leave_community(request: HttpRequest, id: int):
+    community = get_object_or_404(Community, id=id)
+
+    if request.method != "POST":
+        return redirect("community", id=community.id)
+
+    membership = CommunityMembership.objects.filter(
+        user=request.user,
+        community=community,
+    )
+
+    if not membership.exists():
+        messages.info(request, "You are not a member of this community.")
+        return redirect("community", id=community.id)
+
+    membership.delete()
+    messages.success(request, f"You have left the community '{community.name}'.")
+    return redirect("community", id=community.id)
+
+
 def _join_public_community(request: HttpRequest, community: Community):
 
     CommunityMembership.objects.create(
