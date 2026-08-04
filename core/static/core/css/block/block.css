@@ -34,7 +34,9 @@
 
 .messages {
     &>li {
+        position: relative;
         padding: var(--s0);
+        padding-inline-end: calc(var(--s0) + 2.25rem);
         border: 1px solid var(--message-border);
         border-radius: var(--s-1);
         margin-block: 0;
@@ -75,6 +77,42 @@
         --message-foreground: color-mix(in oklab, oklch(0.55 0.16 28) 72%, black);
         --message-background: color-mix(in oklab, oklch(0.94 0.06 28) 78%, white);
         --message-border: color-mix(in oklab, oklch(0.55 0.16 28) 26%, white);
+    }
+
+    .messages__body {
+        display: block;
+        text-align: start;
+    }
+
+    .messages__close {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: var(--s-2);
+        width: 1.75rem;
+        height: 1.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: color-mix(in oklab, var(--message-background) 92%, var(--message-accent));
+        color: var(--message-accent);
+        cursor: pointer;
+        opacity: 0.85;
+        transform: translateY(-50%);
+        transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+
+        &:hover {
+            background: color-mix(in oklab, var(--message-background) 76%, white);
+            color: var(--message-foreground);
+            opacity: 1;
+        }
+
+        &:active {
+            background: color-mix(in oklab, var(--message-background) 70%, white);
+        }
     }
 }
 

@@ -43,7 +43,17 @@
         <section class="margin-block-start:s0 margin-block-end:s0">
             <ul class="messages center list-style:none padding:0">
                 {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    <span class="messages__body">{{ message }}</span>
+                    <button
+                        class="messages__close"
+                        type="button"
+                        aria-label="Dismiss message"
+                        onclick="this.closest('li').remove()"
+                    >
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </li>
                 {% endfor %}
             </ul>
         </section>
