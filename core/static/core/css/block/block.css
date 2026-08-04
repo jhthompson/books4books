@@ -35,8 +35,12 @@
 .messages {
     &>li {
         padding: var(--s0);
-        border: 1px solid transparent;
+        border: 1px solid var(--message-border);
+        border-radius: var(--s-1);
         margin-block: 0;
+        color: var(--message-foreground);
+        background-color: var(--message-background);
+        box-shadow: 0 1px 2px color-mix(in oklab, black 10%, transparent);
     }
 
     &>li+li {
@@ -44,33 +48,33 @@
     }
 
     & .debug {
-        color: #31708f;
-        background-color: #d9edf7;
-        border-color: #bce8f1;
+        --message-foreground: color-mix(in oklab, oklch(0.56 0.08 235) 72%, black);
+        --message-background: color-mix(in oklab, oklch(0.92 0.05 235) 78%, white);
+        --message-border: color-mix(in oklab, oklch(0.56 0.08 235) 26%, white);
     }
 
     & .info {
-        color: #31708f;
-        background-color: #d9edf7;
-        border-color: #bce8f1;
+        --message-foreground: color-mix(in oklab, oklch(0.56 0.08 205) 72%, black);
+        --message-background: color-mix(in oklab, oklch(0.92 0.05 205) 78%, white);
+        --message-border: color-mix(in oklab, oklch(0.56 0.08 205) 26%, white);
     }
 
     & .success {
-        color: #3c763d;
-        background-color: #dff0d8;
-        border-color: #d6e9c6;
+        --message-foreground: color-mix(in oklab, var(--primary) 78%, black);
+        --message-background: color-mix(in oklab, var(--primary-background) 88%, white);
+        --message-border: color-mix(in oklab, var(--primary) 30%, white);
     }
 
     & .warning {
-        color: #8a6d3b;
-        background-color: #fcf8e3;
-        border-color: #faebcc;
+        --message-foreground: color-mix(in oklab, oklch(0.58 0.11 75) 72%, black);
+        --message-background: color-mix(in oklab, oklch(0.94 0.06 75) 78%, white);
+        --message-border: color-mix(in oklab, oklch(0.58 0.11 75) 26%, white);
     }
 
     & .error {
-        color: #a94442;
-        background-color: #f2dede;
-        border-color: #ebccd1;
+        --message-foreground: color-mix(in oklab, oklch(0.55 0.16 28) 72%, black);
+        --message-background: color-mix(in oklab, oklch(0.94 0.06 28) 78%, white);
+        --message-border: color-mix(in oklab, oklch(0.55 0.16 28) 26%, white);
     }
 }
 

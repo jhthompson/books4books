@@ -183,7 +183,7 @@ def leave_community(request: HttpRequest, id: int):
         return redirect("community", id=community.id)
 
     membership.delete()
-    messages.success(request, f"You have left the community '{community.name}'.")
+    messages.success(request, f"You have left '{community.name}'.")
     return redirect("community", id=community.id)
 
 
@@ -195,7 +195,7 @@ def _join_public_community(request: HttpRequest, community: Community):
         permission_level=CommunityMembership.PermissionLevel.MEMBER,
     )
 
-    messages.success(request, f"You have joined the community '{community.name}'.")
+    messages.success(request, f"You have joined '{community.name}'.")
     return redirect("community", id=community.id)
 
 
