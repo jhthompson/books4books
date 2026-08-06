@@ -15,16 +15,14 @@
         </div>
     </div>
 
-    <form class="stack" method="post">
+    <form id="listing-communities-form" class="stack" method="post">
         {% csrf_token %}
         {{ form }}
-        <div class="display:flex justify-content:flex-end">
-            <input class="button" type="submit" value="Update Communities">
-        </div>
     </form>
 
-    <div class="display:flex justify-content:flex-end gap:s0">
-        <a class="button" href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
+    <div class="display:flex justify-content:flex-end gap:s0 align-items:center">
+        <input class="button" form="listing-communities-form" type="submit" value="Update Communities">
+        <a class="button button--destructive" href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
     </div>
 </div>
 {% endblock main %}

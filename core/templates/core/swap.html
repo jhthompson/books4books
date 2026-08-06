@@ -62,10 +62,10 @@
     {% if swap.status == 'PROPOSED' %}
         <div class="display:flex justify-content:flex-end gap:s0">
             {% if swap.proposed_by == you %}
-                <a class="button" href="{% url 'cancel_swap' swap.id %}">Cancel</a>
+                <a class="button button--destructive" href="{% url 'cancel_swap' swap.id %}">Cancel</a>
             {% else %}
                 <a class="button" href="{% url 'accept_swap' swap.id %}">Accept</a>
-                <a class="button" href="{% url 'decline_swap' swap.id %}">Decline</a>
+                <a class="button button--destructive" href="{% url 'decline_swap' swap.id %}">Decline</a>
             {% endif %}
         </div>
     {% elif swap.status == 'CANCELLED' %}
