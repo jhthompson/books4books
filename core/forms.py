@@ -105,6 +105,7 @@ class BookListingSelectionFormSet(forms.BaseFormSet):
         if form_index < len(self.owners):
             form_kwargs["owner"] = self.owners[form_index]
             form_kwargs["community"] = self.community
+            form_kwargs["required"] = form_index == 0
         return form_kwargs
 
 
@@ -118,7 +119,9 @@ class BookListingSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         owner = kwargs.pop("owner", None)
         community = kwargs.pop("community", None)
+        required = kwargs.pop("required", True)
         super().__init__(*args, **kwargs)
+        self.fields["book_listings"].required = required
         if owner and community:
             self.fields["book_listings"].queryset = BookListing.objects.filter(
                 owner=owner,

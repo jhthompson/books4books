@@ -328,7 +328,6 @@ class BookSwap(models.Model):
 
         return (
             participants_are_members
-            and self.offered_listings.exists()
             and self.requested_listings.exists()
             and offered_are_available
             and requested_are_available
