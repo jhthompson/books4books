@@ -4,25 +4,35 @@
 
 <div class="stack center">
     <p>Swap proposed in <a href="{% url 'community' swap.community.id %}">{{ swap.community.name }}</a></p> 
-    <div style="display: flex; justify-content: space-between; align-items: start;">
+    <div class="swap-books">
         <div>
             <h2>{{ them.username }}'s books</h2>
-            <ul>
+            <ul class="cluster padding:0 list-style:none justify-content:center">
                 {% for listing in their_listings %}
-                    <li>{{ listing.title }}</li>
+                    <li>
+                        <figure class="swap-books__book">
+                            <img class="swap-books__cover" src="{{ listing.cover.url }}" alt="Cover of {{ listing.title }}" />
+                            <figcaption class="swap-books__title">{{ listing.title }}</figcaption>
+                        </figure>
+                    </li>
                 {% empty %}
                     <li class="font-style:italic">nothing</li>
                 {% endfor %}
             </ul>
         </div>
 
-        <i class="bi bi-arrow-left-right font-size:s1" style="align-self: center;"></i>
+        <i class="swap-books__arrow bi bi-arrow-left-right font-size:s1"></i>
 
         <div>
             <h2>Your books</h2>
-            <ul>
+            <ul class="cluster padding:0 list-style:none justify-content:center">
                 {% for listing in your_listings %}
-                    <li>{{ listing.title }}</li>
+                    <li>
+                        <figure class="swap-books__book">
+                            <img class="swap-books__cover" src="{{ listing.cover.url }}" alt="Cover of {{ listing.title }}" />
+                            <figcaption class="swap-books__title">{{ listing.title }}</figcaption>
+                        </figure>
+                    </li>
                 {% empty %}
                     <li class="font-style:italic">nothing</li>
                 {% endfor %}

@@ -101,10 +101,26 @@ class BookSwapTests(TransactionTestCase):
         self.assertFalse(swap.offered_listings.exists())
         swap.accept(receiver)
         self.assertEqual(swap.status, BookSwap.Status.ACCEPTED)
-        self.assertContains(client.get(reverse("swaps")), "<em>nothing</em>", html=True)
         self.assertContains(
-            client.get(reverse("swap", args=[swap.id])),
-            "<li><em>nothing</em></li>",
+            client.get(reverse("swaps")),
+            '<span class="font-style:italic">nothing</span>',
+            html=True,
+        )
+        swap_response = client.get(reverse("swap", args=[swap.id]))
+        self.assertContains(
+            swap_response,
+            '<li class="font-style:italic">nothing</li>',
+            html=True,
+        )
+        self.assertContains(
+            swap_response,
+            '<img class="swap-books__cover" src="/media/cover.jpg" '
+            'alt="Cover of Requested book">',
+            html=True,
+        )
+        self.assertContains(
+            swap_response,
+            '<figcaption class="swap-books__title">Requested book</figcaption>',
             html=True,
         )
 

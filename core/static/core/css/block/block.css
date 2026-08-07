@@ -2,6 +2,43 @@
     max-width: 200px;
 }
 
+.swap-books {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--s0);
+    width: 100%;
+    text-align: center;
+
+    @media (max-width: 576px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.swap-books__book {
+    width: 88px;
+}
+
+.swap-books__cover {
+    width: 72px;
+    height: 108px;
+    margin-inline: auto;
+    object-fit: contain;
+}
+
+.swap-books__title {
+    margin-block-start: var(--s-3);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.swap-books__arrow {
+    @media (max-width: 576px) {
+        transform: rotate(90deg);
+    }
+}
+
 .listing-container {
     display: flex;
     gap: var(--s0);
