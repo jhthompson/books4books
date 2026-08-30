@@ -10,7 +10,7 @@ dependencies = [
     "django-allauth==65.19.1",
     "django-anymail[mailgun]==15.1",
     "django-isbn-field==0.5.3",
-    "gunicorn==26.1.0",
+    "gunicorn==26.2.0",
     "pillow==12.3.0",
     "psycopg==3.3.4",
     "python-dotenv==1.2.3",
