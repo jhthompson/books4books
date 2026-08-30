@@ -14,7 +14,7 @@ dependencies = [
     "pillow==12.3.0",
     "psycopg==3.3.4",
     "python-dotenv==1.2.3",
-    "sentry-sdk[django]==2.68.0",
+    "sentry-sdk[django]==2.68.1",
     "zxing-cpp==3.1.1",
 ]
 
