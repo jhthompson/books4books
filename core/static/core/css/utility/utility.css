@@ -9,6 +9,7 @@
 .box {
     padding: var(--s0);
     border: var(--border-thin, 1px) solid;
+    background: var(--surface);
 }
 
 .center {

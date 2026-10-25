@@ -12,9 +12,15 @@
     --s4: calc(var(--s3) * var(--ratio));
     --s5: calc(var(--s4) * var(--ratio));
 
-    --primary: oklch(0.5 0.09 156);
-    --primary-background: oklch(0.9 0.09 156);
-    --muted: #6c757d;
+    --background: #f3e7d5;
+    --surface: #fff8ec;
+    --primary: #87452f;
+    --primary-background: #e6d2b5;
+    --muted: #6b6055;
+    --info: #506873;
+    --success: #596743;
+    --warning: #856019;
+    --error: #934b42;
 }
 
 * {
@@ -23,6 +29,7 @@
 
 body {
     padding: var(--s0);
+    background: var(--background);
 }
 
 a,
