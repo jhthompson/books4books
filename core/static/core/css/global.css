@@ -66,6 +66,10 @@ input:not( :where([type="submit"],
     inline-size: 100%;
 }
 
+fieldset {
+    border: 1px solid var(--muted);
+}
+
 table {
     caption-side: bottom;
     border-collapse: collapse;
