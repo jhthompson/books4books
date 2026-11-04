@@ -199,6 +199,35 @@
     }
 }
 
+.button.button--secondary {
+    background: var(--surface);
+    border-color: var(--muted);
+    color: var(--muted);
+
+    &:visited {
+        color: var(--muted);
+    }
+
+    &:hover {
+        background: var(--primary-background);
+        border-color: var(--muted);
+    }
+
+    &:hover,
+    &:active {
+        color: color-mix(in oklab, var(--muted) 85%, black);
+    }
+
+    &:active {
+        background: color-mix(in oklab, var(--primary-background) 88%, var(--muted));
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--muted);
+        outline-offset: 3px;
+    }
+}
+
 .button.button--destructive {
     background: oklch(0.55 0.18 25);
     border-color: color-mix(in oklab, oklch(0.55 0.18 25) 72%, black);
