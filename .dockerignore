@@ -1,0 +1,56 @@
+# Python artifacts
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environments and dependencies
+.venv/
+venv/
+env/
+ENV/
+lib/
+lib64/
+bin/
+include/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django specific
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+files/
+
+# Configuration and secrets
+.env
+*.env
+.secret
+secrets.json
+.env.dev
+
+# Docker & Git
+.git/
+.gitignore
+.github/
+.gitlab-ci.yml
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# IDEs, text editors, and OS files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+.DS_Store
+Thumbs.db
+
+# Other
+TODO.md
+justfile
