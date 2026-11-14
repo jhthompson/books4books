@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["djade==1.10.0", "django-debug-toolbar==8.0.0", "ruff==0.17.3"]
+dev = ["djade==1.10.0", "django-debug-toolbar==8.0.0", "ruff==0.17.4"]
 
 [tool.ruff]
 extend-exclude = ["**/migrations/*.py"]
