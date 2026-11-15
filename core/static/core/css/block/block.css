@@ -92,38 +92,22 @@
 .messages {
     &>li {
         --message-accent: var(--muted);
-        --message-foreground: color-mix(in oklab, var(--message-accent) 85%, black);
-        --message-background: color-mix(in oklab, var(--message-accent) 9%, var(--surface));
-        --message-border: color-mix(in oklab, var(--message-accent) 35%, var(--primary-background));
+        --message-foreground: inherit;
+        --message-background: var(--surface);
+        --message-border: var(--muted);
         position: relative;
         padding: var(--s0);
         padding-inline-end: calc(var(--s0) + 2.25rem);
         border: 1px solid var(--message-border);
-        border-radius: var(--s-1);
+        border-radius: 0;
         margin-block: 0;
         color: var(--message-foreground);
         background-color: var(--message-background);
-        box-shadow: 0 1px 2px color-mix(in oklab, black 10%, transparent);
+        box-shadow: none;
     }
 
     &>li+li {
         margin-block-start: var(--s-1);
-    }
-
-    & .info {
-        --message-accent: var(--info);
-    }
-
-    & .success {
-        --message-accent: var(--success);
-    }
-
-    & .warning {
-        --message-accent: var(--warning);
-    }
-
-    & .error {
-        --message-accent: var(--error);
     }
 
     .messages__body {
@@ -143,8 +127,8 @@
         margin: 0;
         padding: 0;
         border: 0;
-        border-radius: 999px;
-        background: color-mix(in oklab, var(--message-background) 92%, var(--message-accent));
+        border-radius: 0;
+        background: var(--message-background);
         color: var(--message-foreground);
         cursor: pointer;
         transform: translateY(-50%);

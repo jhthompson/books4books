@@ -43,7 +43,7 @@
         <section class="margin-block-start:s0 margin-block-end:s0">
             <ul class="messages center list-style:none padding:0">
                 {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                <li>
                     <span class="messages__body">{{ message }}</span>
                     <button
                         class="messages__close"
