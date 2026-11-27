@@ -2,8 +2,10 @@
 
 {% block main %}
 <div class="stack">
-    <h1 class="center text-align:center color-primary">Your Listings</h1>
-    <a class="center button" href="{% url 'new_listing_isbn_prompt' %}">Add a new listing</a>
+    <div class="center cluster justify-content:space-between">
+        <h1 class="color-primary">Your Listings</h1>
+        <a class="button" href="{% url 'new_listing_isbn_prompt' %}">Add</a>
+    </div>
 
     <ul class="center stack padding:0">
     {% for listing in listings %}
