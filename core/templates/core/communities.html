@@ -2,8 +2,12 @@
 
 {% block main %}
 <div class="stack">
-    <h1 class="center text-align:center color-primary">Communities</h1>
-    <a class="center button" href="{% url 'new_community' %}">Create a Community</a>
+    <div class="center cluster justify-content:space-between">
+        <h1 class="color-primary">Communities</h1>
+        <a class="button" href="{% url 'new_community' %}" aria-label="Create a community">
+            <i class="bi bi-plus-circle" aria-hidden="true"></i> Create
+        </a>
+    </div>
 
     {% if user.is_authenticated %}
     <section class="center">
