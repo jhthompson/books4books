@@ -2,18 +2,19 @@
 
 {% block main %}
 <div class="stack">
-    <div>
-        <h1 class="center text-align:center color-primary">{{ community.name }}</h1>
-        <p class="center">{{ community.description }}</p>
-        <p class="center color:muted font-style:italic">{{ num_admins }} admin{{ num_admins|pluralize }} &middot; {{ num_members }} member{{ num_members|pluralize }}</p>
-    </div>
-    {% if not in_community %}
     <div class="center">
-        <a class="button" href="{% url 'join_community' community.id %}">
-            <i class="bi bi-person-plus margin-inline-end:s-2"></i>Join Community
-        </a>
+        <div class="cluster justify-content:space-between">
+            <h1 class="color-primary">{{ community.name }}</h1>
+            {% if not in_community %}
+                <a class="button" href="{% url 'join_community' community.id %}">
+                    <i class="bi bi-person-plus margin-inline-end:s-2" aria-hidden="true"></i>Join Community
+                </a>
+            {% endif %}
+        </div>
+        <p>{{ community.description }}</p>
+        <p class="color:muted font-style:italic">{{ num_admins }} admin{{ num_admins|pluralize }} &middot; {{ num_members }} member{{ num_members|pluralize }}</p>
     </div>
-    {% else %}
+    {% if in_community %}
     <form class="center" method="post" action="{% url 'leave_community' community.id %}">
         {% csrf_token %}
         <button class="button button--destructive" type="submit">
